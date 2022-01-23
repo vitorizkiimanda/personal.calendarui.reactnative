@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
-import {dynamicStyleSelectedDate} from './styles';
+import {dynamicStyleDateItem} from './styles';
 
 import * as dateFns from 'date-fns';
 const DAY_LABEL = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
@@ -55,22 +55,35 @@ const CalendarCustom = (props: PropsCalendarCustom) => {
           <TouchableOpacity
             onPress={() => onPressDate(clonedDay)}
             style={
-              dynamicStyleSelectedDate(selectedDate, clonedDay, today).container
+              dynamicStyleDateItem(
+                selectedDate,
+                clonedDay,
+                today,
+                monthStart,
+                i,
+              ).container
             }>
             <Text
-              style={{
-                color: dateFns.isSameMonth(clonedDay, monthStart)
-                  ? 'black'
-                  : 'gray',
-                textAlign: 'center',
-              }}>
+              style={
+                dynamicStyleDateItem(
+                  selectedDate,
+                  clonedDay,
+                  today,
+                  monthStart,
+                  i,
+                ).text
+              }>
               {formattedDate}
             </Text>
           </TouchableOpacity>,
         );
         day = dateFns.addDays(day, 1);
       }
-      rows.push(<View style={{flexDirection: 'row', flex: 1}}>{days}</View>);
+      rows.push(
+        <View style={{flex: 1, flexDirection: 'row', marginTop: 16}}>
+          {days}
+        </View>,
+      );
       days = [];
     }
     return <View>{rows}</View>;
