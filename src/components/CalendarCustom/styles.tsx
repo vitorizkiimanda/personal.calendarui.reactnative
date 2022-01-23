@@ -1,7 +1,13 @@
 import {StyleSheet} from 'react-native';
-import {isSameDay, isSameMonth} from 'date-fns';
+import {format, isSameDay, isSameMonth} from 'date-fns';
 
 const BORDER_RADIUS_SIZE = 48;
+
+interface HolidayDate {
+  holiday_date: string;
+  holiday_name: string;
+  is_national_holiday: Boolean;
+}
 
 const isSelected = (
   selectedDate: Date | null,
@@ -9,7 +15,6 @@ const isSelected = (
   today: Date,
 ) => {
   if (!selectedDate) return false;
-  console.log('selectedDate < today', selectedDate < today);
   if (selectedDate < today) {
     if (clonedDay >= selectedDate && clonedDay < today) return true;
     return false;
@@ -63,11 +68,18 @@ const calcBorderRadiusRight = (
   return undefined;
 };
 
+const isHoliday = (clonedDay: Date, arrHolidayDates: Array<HolidayDate>) => {
+  const formattedDate = format(clonedDay, 'yyyy-MM-d');
+  const found = arrHolidayDates.some(val => val.holiday_date === formattedDate);
+  return found;
+};
+
 const getTextColor = (
   selectedDate: Date | null,
   clonedDay: Date,
   today: Date,
   monthStart: Date,
+  arrHolidayDates: Array<HolidayDate>,
   index: number,
 ) => {
   if (!!selectedDate) {
@@ -78,6 +90,7 @@ const getTextColor = (
     if (selectedDate < today && clonedDay >= selectedDate && clonedDay <= today)
       return 'white';
   }
+  if (isHoliday(clonedDay, arrHolidayDates)) return 'blue';
   if (!isSameMonth(clonedDay, monthStart)) return 'gray';
   if (index === 5 || index === 6) return 'blue';
   return 'black';
@@ -98,7 +111,7 @@ const getTextOpacity = (
     if (selectedDate < today && clonedDay >= selectedDate && clonedDay <= today)
       return 1;
   }
-  if (!isSameMonth(clonedDay, monthStart)) return 0.5;
+  if (!isSameMonth(clonedDay, monthStart)) return 0.65;
   return 1;
 };
 
@@ -107,6 +120,7 @@ export const dynamicStyleDateItem = (
   clonedDay: Date,
   today: Date,
   monthStart: Date,
+  arrHolidayDates: Array<HolidayDate>,
   index: number,
 ) =>
   StyleSheet.create({
@@ -149,7 +163,14 @@ export const dynamicStyleDateItem = (
       padding: 8,
     },
     text: {
-      color: getTextColor(selectedDate, clonedDay, today, monthStart, index),
+      color: getTextColor(
+        selectedDate,
+        clonedDay,
+        today,
+        monthStart,
+        arrHolidayDates,
+        index,
+      ),
       textAlign: 'center',
       opacity: getTextOpacity(
         selectedDate,

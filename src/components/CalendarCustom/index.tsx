@@ -8,7 +8,14 @@ const DAY_LABEL = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
 interface updateSelectedDateInterface {
   (date: Date | null): void;
 }
+
+interface HolidayDate {
+  holiday_date: string;
+  holiday_name: string;
+  is_national_holiday: Boolean;
+}
 interface PropsCalendarCustom {
+  arrHolidayDates: Array<HolidayDate>;
   selectedMonth: Date;
   selectedDate: Date | null;
   today: Date;
@@ -16,7 +23,13 @@ interface PropsCalendarCustom {
 }
 
 const CalendarCustom = (props: PropsCalendarCustom) => {
-  const {selectedMonth, selectedDate, today, updateSelectedDate} = props;
+  const {
+    arrHolidayDates,
+    selectedMonth,
+    selectedDate,
+    today,
+    updateSelectedDate,
+  } = props;
 
   // UI logic
   const onPressDate = (val: Date) => {
@@ -60,6 +73,7 @@ const CalendarCustom = (props: PropsCalendarCustom) => {
                 clonedDay,
                 today,
                 monthStart,
+                arrHolidayDates,
                 i,
               ).container
             }>
@@ -70,6 +84,7 @@ const CalendarCustom = (props: PropsCalendarCustom) => {
                   clonedDay,
                   today,
                   monthStart,
+                  arrHolidayDates,
                   i,
                 ).text
               }>
@@ -98,6 +113,7 @@ const CalendarCustom = (props: PropsCalendarCustom) => {
 };
 
 CalendarCustom.defaultProps = {
+  arrHolidayDates: [],
   selectedMonth: new Date(),
   selectedDate: new Date(),
   today: new Date(),
