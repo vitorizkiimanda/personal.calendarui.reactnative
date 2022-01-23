@@ -1,16 +1,29 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
+import {dynamicStyleSelectedDate} from './styles';
 
 import * as dateFns from 'date-fns';
 const DAY_LABEL = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
 
+interface updateSelectedDateInterface {
+  (date: Date | null): void;
+}
 interface PropsCalendarCustom {
   selectedMonth: Date;
-  selectedDate: Date;
+  selectedDate: Date | null;
+  today: Date;
+  updateSelectedDate: updateSelectedDateInterface;
 }
 
 const CalendarCustom = (props: PropsCalendarCustom) => {
-  const {selectedMonth, selectedDate} = props;
+  const {selectedMonth, selectedDate, today, updateSelectedDate} = props;
+
+  // UI logic
+  const onPressDate = (val: Date) => {
+    updateSelectedDate(
+      !selectedDate || !dateFns.isSameDay(selectedDate, val) ? val : null,
+    );
+  };
 
   // UI render
   const renderDayLabel = () => (
@@ -37,28 +50,27 @@ const CalendarCustom = (props: PropsCalendarCustom) => {
     while (day <= endDate) {
       for (let i = 0; i < 7; i++) {
         formattedDate = dateFns.format(day, dateFormat);
-        const cloneDay = day;
+        const clonedDay = day;
         days.push(
-          <View style={{flex: 1}}>
+          <TouchableOpacity
+            onPress={() => onPressDate(clonedDay)}
+            style={
+              dynamicStyleSelectedDate(selectedDate, clonedDay, today).container
+            }>
             <Text
               style={{
-                backgroundColor: dateFns.isSameDay(day, selectedDate)
-                  ? 'green'
-                  : undefined,
-                color: dateFns.isSameMonth(day, monthStart) ? 'black' : 'gray',
+                color: dateFns.isSameMonth(clonedDay, monthStart)
+                  ? 'black'
+                  : 'gray',
                 textAlign: 'center',
               }}>
               {formattedDate}
             </Text>
-          </View>,
+          </TouchableOpacity>,
         );
         day = dateFns.addDays(day, 1);
       }
-      rows.push(
-        <View style={{flexDirection: 'row', borderWidth: 1, flex: 1}}>
-          {days}
-        </View>,
-      );
+      rows.push(<View style={{flexDirection: 'row', flex: 1}}>{days}</View>);
       days = [];
     }
     return <View>{rows}</View>;
@@ -74,6 +86,9 @@ const CalendarCustom = (props: PropsCalendarCustom) => {
 
 CalendarCustom.defaultProps = {
   selectedMonth: new Date(),
+  selectedDate: new Date(),
+  today: new Date(),
+  updateSelectedDate: () => {},
 };
 
 export default CalendarCustom;

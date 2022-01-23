@@ -1,20 +1,49 @@
 import React from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
+import ModalDropdown from '../ModalDropdown';
 
 import * as dateFns from 'date-fns';
+
+const LABEL_MONTH = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
+
+const currentYear = dateFns.getYear(new Date());
+let iterateYear = 1970;
+
+let LABEL_YEAR: number[] | undefined = [];
+while (iterateYear < currentYear + 100) {
+  LABEL_YEAR.push(iterateYear);
+  iterateYear += 1;
+}
 
 interface updateMonthInterface {
   (date: Date): void;
 }
-
+interface updateYearInterface {
+  (val: number): void;
+}
 interface CalendarNavigatorInterface {
   updateMonth: updateMonthInterface;
+  updateYear: updateYearInterface;
+  selectedDate: Date | null;
   selectedMonth: Date;
-  selectedDate: Date;
+  selectedYear: number;
 }
 
 const CalendarNavigator = (props: CalendarNavigatorInterface) => {
-  const {updateMonth, selectedMonth, selectedDate} = props;
+  const {updateMonth, updateYear, selectedMonth, selectedYear} = props;
 
   // UI function
   const onPressNextMonth = () => {
@@ -22,6 +51,12 @@ const CalendarNavigator = (props: CalendarNavigatorInterface) => {
   };
   const onPressPrevMonth = () => {
     updateMonth(dateFns.addMonths(selectedMonth, -1));
+  };
+  const onUpdateYear = (val: string | number) => {
+    updateYear(Number(val));
+  };
+  const onUpdateMonth = (val: string | number) => {
+    updateMonth(dateFns.setMonth(selectedMonth, LABEL_MONTH.indexOf(`${val}`)));
   };
 
   // UI render
@@ -40,14 +75,18 @@ const CalendarNavigator = (props: CalendarNavigatorInterface) => {
           marginRight: 16,
         }}>
         <View style={{alignItems: 'flex-start', maxWidth: '60%'}}>
-          <Text numberOfLines={1} adjustsFontSizeToFit>
-            {dateFns.format(selectedMonth, 'MMMM')}
-          </Text>
+          <ModalDropdown
+            list={LABEL_MONTH}
+            selected={dateFns.format(selectedMonth, 'MMMM')}
+            updateSelected={onUpdateMonth}
+          />
         </View>
         <View style={{alignItems: 'flex-start', maxWidth: '40%'}}>
-          <Text numberOfLines={1} adjustsFontSizeToFit>
-            {dateFns.format(selectedMonth, 'yyyy')}
-          </Text>
+          <ModalDropdown
+            list={LABEL_YEAR}
+            selected={selectedYear}
+            updateSelected={onUpdateYear}
+          />
         </View>
       </View>
       <View
@@ -67,7 +106,8 @@ const CalendarNavigator = (props: CalendarNavigatorInterface) => {
 };
 
 CalendarNavigator.defaultProps = {
-  addMonth: () => {},
+  updateMonth: () => {},
+  updateYear: () => {},
   selectedMonth: new Date(),
   selectedDate: new Date(),
 };

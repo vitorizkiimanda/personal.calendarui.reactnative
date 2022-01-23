@@ -10,18 +10,32 @@ import styles from './styles';
 import CalendarCustom from '../components/CalendarCustom';
 import CalendarNavigator from '../components/CalendarNavigator';
 
+import {getYear, setYear} from 'date-fns';
+
+const today = new Date();
+
 const CalendarScreen = () => {
   const isDarkMode = useColorScheme() === 'dark';
 
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedMonth, setSelectedMonth] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedMonth, setSelectedMonth] = useState(today);
+  const [selectedYear, setSelectedYear] = useState(getYear(today));
 
   useEffect(() => {
-    setSelectedMonth(new Date());
-    setSelectedDate(new Date());
+    setSelectedMonth(today);
+    setSelectedDate(null);
+    setSelectedYear(getYear(today));
     setIsLoading(false);
   }, []);
+
+  useEffect(() => {
+    setSelectedMonth(setYear(selectedMonth, selectedYear));
+  }, [selectedYear]);
+
+  useEffect(() => {
+    setSelectedYear(getYear(selectedMonth));
+  }, [selectedMonth]);
 
   // UI render
   return (
@@ -32,15 +46,19 @@ const CalendarScreen = () => {
         <View style={{padding: 16}}>
           {!isLoading && (
             <CalendarNavigator
-              updateMonth={val => setSelectedMonth(val)}
-              selectedMonth={selectedMonth}
               selectedDate={selectedDate}
+              selectedMonth={selectedMonth}
+              selectedYear={selectedYear}
+              updateMonth={val => setSelectedMonth(val)}
+              updateYear={val => setSelectedYear(val)}
             />
           )}
           {!isLoading && (
             <CalendarCustom
-              selectedMonth={selectedMonth}
               selectedDate={selectedDate}
+              selectedMonth={selectedMonth}
+              today={today}
+              updateSelectedDate={val => setSelectedDate(val)}
             />
           )}
         </View>
