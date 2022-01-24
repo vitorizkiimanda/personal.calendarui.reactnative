@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
-import {dynamicStyleDateItem} from './styles';
+import {dynamicStyleDateItem, dynamicStyleDayLabel} from './styles';
+import {ThemeContext} from '../../screen/CalendarScreen';
 
 import * as dateFns from 'date-fns';
 import {isSameDay} from 'date-fns/esm';
@@ -24,6 +25,8 @@ interface PropsCalendarCustom {
 }
 
 const CalendarCustom = (props: PropsCalendarCustom) => {
+  const colorTheme = useContext(ThemeContext);
+
   const {
     arrHolidayDates,
     selectedMonth,
@@ -43,7 +46,7 @@ const CalendarCustom = (props: PropsCalendarCustom) => {
   const renderDayLabel = () => (
     <View style={{flexDirection: 'row', marginBottom: 16}}>
       {DAY_LABEL.map((val, index) => (
-        <Text style={{flex: 1, textAlign: 'center'}}>{val}</Text>
+        <Text style={dynamicStyleDayLabel(colorTheme, index).text}>{val}</Text>
       ))}
     </View>
   );
@@ -70,6 +73,7 @@ const CalendarCustom = (props: PropsCalendarCustom) => {
             onPress={() => onPressDate(clonedDay)}
             style={
               dynamicStyleDateItem(
+                colorTheme,
                 selectedDate,
                 clonedDay,
                 today,
@@ -78,12 +82,14 @@ const CalendarCustom = (props: PropsCalendarCustom) => {
                 i,
               ).container
             }>
+            {/* circular marker : today date, selected date */}
             {!!selectedDate &&
               (isSameDay(clonedDay, selectedDate) ||
                 isSameDay(clonedDay, today)) && (
                 <View
                   style={
                     dynamicStyleDateItem(
+                      colorTheme,
                       selectedDate,
                       clonedDay,
                       today,
@@ -94,9 +100,12 @@ const CalendarCustom = (props: PropsCalendarCustom) => {
                   }
                 />
               )}
+
+            {/* date text */}
             <Text
               style={
                 dynamicStyleDateItem(
+                  colorTheme.selectedDate,
                   selectedDate,
                   clonedDay,
                   today,

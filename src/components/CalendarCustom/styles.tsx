@@ -1,6 +1,8 @@
 import {Dimensions, StyleSheet} from 'react-native';
 import {format, isSameDay, isSameMonth} from 'date-fns';
 
+import {colorInterface} from '../../helpers/Colors';
+
 const {width} = Dimensions.get('window');
 const CELL_WIDTH = (width - 32) / 7;
 const BORDER_RADIUS_SIZE = CELL_WIDTH;
@@ -26,25 +28,29 @@ const isSelected = (
 };
 
 const backgroundColorDateCell = (
+  colorTheme: colorInterface,
   selectedDate: Date | null,
   clonedDay: Date,
   today: Date,
 ) => {
   return isSelected(selectedDate, clonedDay, today) ||
     (!!selectedDate && isSameDay(clonedDay, today))
-    ? 'red'
+    ? colorTheme.selectedDate
     : 'white';
 };
 
 const backgroundColorCircularMarker = (
+  colorTheme: colorInterface,
   selectedDate: Date | null,
   clonedDay: Date,
   today: Date,
 ) => {
   if (!!selectedDate && isSameDay(clonedDay, today)) {
-    return 'green';
+    return colorTheme.today;
   }
-  return isSelected(selectedDate, clonedDay, today) ? 'red' : 'white';
+  return isSelected(selectedDate, clonedDay, today)
+    ? colorTheme.selectedDate
+    : 'white';
 };
 
 const calcBorderRadiusLeft = (
@@ -115,7 +121,7 @@ const getTextColor = (
   }
   if (isHoliday(clonedDay, arrHolidayDates)) return 'blue';
   if (!isSameMonth(clonedDay, monthStart)) return 'gray';
-  if (index === 5 || index === 6) return 'blue';
+  if (index > 4) return 'blue'; // saturday & sunday
   return 'black';
 };
 
@@ -145,6 +151,7 @@ const getZIndex = (clonedDay: Date, selectedDate: Date | null, today: Date) => {
 };
 
 export const dynamicStyleDateItem = (
+  colorTheme: colorInterface,
   selectedDate: Date | null,
   clonedDay: Date,
   today: Date,
@@ -155,8 +162,13 @@ export const dynamicStyleDateItem = (
   StyleSheet.create({
     container: {
       alignItems: 'center',
-      backgroundColor: backgroundColorDateCell(selectedDate, clonedDay, today),
-      borderColor: isSameDay(clonedDay, today) ? 'green' : undefined,
+      backgroundColor: backgroundColorDateCell(
+        colorTheme,
+        selectedDate,
+        clonedDay,
+        today,
+      ),
+      borderColor: isSameDay(clonedDay, today) ? colorTheme.today : undefined,
       borderWidth: isSameDay(clonedDay, today) && !selectedDate ? 1 : 0,
       borderTopLeftRadius: calcBorderRadiusLeft(
         selectedDate,
@@ -213,6 +225,7 @@ export const dynamicStyleDateItem = (
     },
     circularMarker: {
       backgroundColor: backgroundColorCircularMarker(
+        colorTheme,
         selectedDate,
         clonedDay,
         today,
@@ -222,5 +235,17 @@ export const dynamicStyleDateItem = (
       position: 'absolute',
       width: CELL_WIDTH + 16,
       overflow: 'visible',
+    },
+  });
+
+export const dynamicStyleDayLabel = (
+  colorTheme: colorInterface,
+  index: number,
+) =>
+  StyleSheet.create({
+    text: {
+      color: index > 4 ? 'blue' : 'black', // saturday & sunday
+      flex: 1,
+      textAlign: 'center',
     },
   });
