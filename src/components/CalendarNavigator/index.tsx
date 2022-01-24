@@ -1,6 +1,8 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
 import ModalDropdown from '../ModalDropdown';
+import {ThemeContext} from '../../../App';
+import {dynamicStyleChevronNextPrev} from './styles';
 
 import * as dateFns from 'date-fns';
 
@@ -43,6 +45,7 @@ interface CalendarNavigatorInterface {
 }
 
 const CalendarNavigator = (props: CalendarNavigatorInterface) => {
+  const {colorTheme} = useContext(ThemeContext);
   const {updateMonth, updateYear, selectedMonth, selectedYear} = props;
 
   // UI function
@@ -94,11 +97,20 @@ const CalendarNavigator = (props: CalendarNavigatorInterface) => {
           flexDirection: 'row',
           flexWrap: 'wrap',
         }}>
-        <TouchableOpacity style={{marginRight: 16}} onPress={onPressPrevMonth}>
-          <Text>Prev</Text>
+        <TouchableOpacity
+          style={{
+            marginRight: 16,
+            ...dynamicStyleChevronNextPrev(colorTheme).container,
+          }}
+          onPress={onPressPrevMonth}>
+          <Text
+            style={dynamicStyleChevronNextPrev(colorTheme).text}>{`<`}</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={onPressNextMonth}>
-          <Text>Next</Text>
+        <TouchableOpacity
+          style={dynamicStyleChevronNextPrev(colorTheme).container}
+          onPress={onPressNextMonth}>
+          <Text
+            style={dynamicStyleChevronNextPrev(colorTheme).text}>{`>`}</Text>
         </TouchableOpacity>
       </View>
     </View>
