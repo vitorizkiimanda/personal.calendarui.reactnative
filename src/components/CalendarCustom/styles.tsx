@@ -1,7 +1,9 @@
-import {StyleSheet} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
 import {format, isSameDay, isSameMonth} from 'date-fns';
 
-const BORDER_RADIUS_SIZE = 48;
+const {width} = Dimensions.get('window');
+const CELL_WIDTH = (width - 32) / 7;
+const BORDER_RADIUS_SIZE = CELL_WIDTH;
 
 interface HolidayDate {
   holiday_date: string;
@@ -28,6 +30,17 @@ const backgroundColorDateCell = (
   clonedDay: Date,
   today: Date,
 ) => {
+  return isSelected(selectedDate, clonedDay, today) ||
+    (!!selectedDate && isSameDay(clonedDay, today))
+    ? 'red'
+    : 'white';
+};
+
+const backgroundColorCircularMarker = (
+  selectedDate: Date | null,
+  clonedDay: Date,
+  today: Date,
+) => {
   if (!!selectedDate && isSameDay(clonedDay, today)) {
     return 'green';
   }
@@ -44,9 +57,14 @@ const calcBorderRadiusLeft = (
   if (!selectedDate && isSameDay(clonedDay, today)) return BORDER_RADIUS_SIZE;
   if (!selectedDate) return undefined;
   if (index === 0) return BORDER_RADIUS_SIZE;
-  if (selectedDate > today && isSameDay(clonedDay, today))
-    return BORDER_RADIUS_SIZE;
-  if (isSameDay(clonedDay, selectedDate) && clonedDay < today)
+  if (selectedDate < today) {
+    if (isSameDay(clonedDay, today)) return undefined;
+    if (isSameDay(clonedDay, selectedDate)) return BORDER_RADIUS_SIZE;
+  }
+  if (
+    (isSameDay(clonedDay, selectedDate) && clonedDay < today) ||
+    isSameDay(clonedDay, today)
+  )
     return BORDER_RADIUS_SIZE;
   return undefined;
 };
@@ -61,9 +79,14 @@ const calcBorderRadiusRight = (
   if (!selectedDate && isSameDay(clonedDay, today)) return BORDER_RADIUS_SIZE;
   if (!selectedDate) return undefined;
   if (index === 6) return BORDER_RADIUS_SIZE;
-  if (selectedDate > today && isSameDay(clonedDay, today))
-    return BORDER_RADIUS_SIZE;
-  if (isSameDay(clonedDay, selectedDate) && clonedDay > today)
+  if (selectedDate > today) {
+    if (isSameDay(clonedDay, today)) return undefined;
+    if (isSameDay(clonedDay, selectedDate)) return BORDER_RADIUS_SIZE;
+  }
+  if (
+    (isSameDay(clonedDay, selectedDate) && clonedDay > today) ||
+    isSameDay(clonedDay, today)
+  )
     return BORDER_RADIUS_SIZE;
   return undefined;
 };
@@ -115,6 +138,12 @@ const getTextOpacity = (
   return 1;
 };
 
+const getZIndex = (clonedDay: Date, selectedDate: Date | null, today: Date) => {
+  if (isSameDay(clonedDay, today)) return 999;
+  if (!!selectedDate && isSameDay(clonedDay, selectedDate)) return 998;
+  return 1;
+};
+
 export const dynamicStyleDateItem = (
   selectedDate: Date | null,
   clonedDay: Date,
@@ -128,7 +157,7 @@ export const dynamicStyleDateItem = (
       alignItems: 'center',
       backgroundColor: backgroundColorDateCell(selectedDate, clonedDay, today),
       borderColor: isSameDay(clonedDay, today) ? 'green' : undefined,
-      borderWidth: isSameDay(clonedDay, today) ? 1 : undefined,
+      borderWidth: isSameDay(clonedDay, today) && !selectedDate ? 1 : 0,
       borderTopLeftRadius: calcBorderRadiusLeft(
         selectedDate,
         clonedDay,
@@ -158,9 +187,11 @@ export const dynamicStyleDateItem = (
         monthStart,
         index,
       ),
-      flex: 1,
+      height: CELL_WIDTH,
       justifyContent: 'center',
       padding: 8,
+      width: CELL_WIDTH,
+      zIndex: getZIndex(clonedDay, selectedDate, today),
     },
     text: {
       color: getTextColor(
@@ -179,5 +210,17 @@ export const dynamicStyleDateItem = (
         monthStart,
         index,
       ),
+    },
+    circularMarker: {
+      backgroundColor: backgroundColorCircularMarker(
+        selectedDate,
+        clonedDay,
+        today,
+      ),
+      borderRadius: CELL_WIDTH + 16,
+      height: CELL_WIDTH + 16,
+      position: 'absolute',
+      width: CELL_WIDTH + 16,
+      overflow: 'visible',
     },
   });

@@ -3,6 +3,7 @@ import {Text, TouchableOpacity, View} from 'react-native';
 import {dynamicStyleDateItem} from './styles';
 
 import * as dateFns from 'date-fns';
+import {isSameDay} from 'date-fns/esm';
 const DAY_LABEL = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
 
 interface updateSelectedDateInterface {
@@ -77,6 +78,22 @@ const CalendarCustom = (props: PropsCalendarCustom) => {
                 i,
               ).container
             }>
+            {!!selectedDate &&
+              (isSameDay(clonedDay, selectedDate) ||
+                isSameDay(clonedDay, today)) && (
+                <View
+                  style={
+                    dynamicStyleDateItem(
+                      selectedDate,
+                      clonedDay,
+                      today,
+                      monthStart,
+                      arrHolidayDates,
+                      i,
+                    ).circularMarker
+                  }
+                />
+              )}
             <Text
               style={
                 dynamicStyleDateItem(
