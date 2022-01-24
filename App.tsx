@@ -33,7 +33,7 @@ const App = () => {
     <ThemeContext.Provider
       value={{
         colorTheme: state.isForceDarkMode ? darkColor : lightColor,
-        isDarkMode: isDarkMode,
+        isDarkMode: state.isForceDarkMode,
         reducerProvider: reducerProvider,
       }}>
       <CalendarScreen />
