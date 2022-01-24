@@ -1,10 +1,11 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {SafeAreaView, ScrollView, StatusBar, View} from 'react-native';
+import {SafeAreaView, ScrollView, StatusBar, View, Switch} from 'react-native';
 import styles from './styles';
 import CalendarCustom from '../../components/CalendarCustom';
 import CalendarNavigator from '../../components/CalendarNavigator';
 import {getListDateHoliday} from '../../service/serviceDateHoliday';
 import {ThemeContext} from '../../../App';
+import {UPDATE_IS_FORCE_DARK_MODE} from '../../constants/reducerActions';
 
 import {addMonths, getMonth, getYear, setYear} from 'date-fns';
 
@@ -16,7 +17,7 @@ interface HolidayDate {
 }
 
 const CalendarScreen = () => {
-  const {colorTheme, isDarkMode} = useContext(ThemeContext);
+  const {colorTheme, isDarkMode, reducerProvider} = useContext(ThemeContext);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedMonth, setSelectedMonth] = useState(today);
@@ -75,7 +76,6 @@ const CalendarScreen = () => {
       setIsLoading(false);
     }
   };
-
   // UI render
   return (
     <SafeAreaView
@@ -83,6 +83,20 @@ const CalendarScreen = () => {
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <ScrollView contentInsetAdjustmentBehavior="automatic">
         <View style={{padding: 16}}>
+          <Switch
+            trackColor={{false: '#3e3e3e', true: '#f4f3f4'}}
+            thumbColor={
+              reducerProvider.state.isForceDarkMode ? '#3e3e3e' : '#f4f3f4'
+            }
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={() => {
+              reducerProvider.dispatch({
+                type: UPDATE_IS_FORCE_DARK_MODE,
+                payload: !reducerProvider.state.isForceDarkMode,
+              });
+            }}
+            value={reducerProvider.state.isForceDarkMode}
+          />
           {!isLoading && (
             <CalendarNavigator
               selectedDate={selectedDate}

@@ -1,0 +1,1 @@
+export const UPDATE_IS_FORCE_DARK_MODE = '@colorMode/UPDATE_IS_FORCE_DARK_MODE';

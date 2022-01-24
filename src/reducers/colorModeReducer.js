@@ -1,0 +1,18 @@
+import {UPDATE_IS_FORCE_DARK_MODE} from '../constants/reducerActions';
+
+const INITIAL_STATE = {
+  isForceDarkMode: 'default',
+};
+
+export default (state = INITIAL_STATE, action) => {
+  console.log('colorModeReducer', state, action);
+  switch (action.type) {
+    case UPDATE_IS_FORCE_DARK_MODE:
+      return {
+        ...state,
+        isForceDarkMode: action.payload,
+      };
+    default:
+      return state;
+  }
+};
