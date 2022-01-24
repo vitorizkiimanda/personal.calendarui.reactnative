@@ -33,10 +33,12 @@ const backgroundColorDateCell = (
   clonedDay: Date,
   today: Date,
 ) => {
-  return isSelected(selectedDate, clonedDay, today) ||
+  if (
+    isSelected(selectedDate, clonedDay, today) ||
     (!!selectedDate && isSameDay(clonedDay, today))
-    ? colorTheme.selectedDate
-    : 'white';
+  )
+    return colorTheme.selectedDateMarker;
+  return undefined;
 };
 
 const backgroundColorCircularMarker = (
@@ -46,11 +48,11 @@ const backgroundColorCircularMarker = (
   today: Date,
 ) => {
   if (!!selectedDate && isSameDay(clonedDay, today)) {
-    return colorTheme.today;
+    return colorTheme.todayMarker;
   }
-  return isSelected(selectedDate, clonedDay, today)
-    ? colorTheme.selectedDate
-    : 'white';
+  if (isSelected(selectedDate, clonedDay, today))
+    return colorTheme.selectedDateMarker;
+  return undefined;
 };
 
 const calcBorderRadiusLeft = (
@@ -104,6 +106,7 @@ const isHoliday = (clonedDay: Date, arrHolidayDates: Array<HolidayDate>) => {
 };
 
 const getTextColor = (
+  colorTheme: colorInterface,
   selectedDate: Date | null,
   clonedDay: Date,
   today: Date,
@@ -113,16 +116,16 @@ const getTextColor = (
 ) => {
   if (!!selectedDate) {
     if (isSameDay(clonedDay, selectedDate) || isSameDay(clonedDay, today))
-      return 'white';
+      return colorTheme.primarySelectedDate;
     if (selectedDate > today && clonedDay <= selectedDate && clonedDay >= today)
-      return 'white';
+      return colorTheme.primarySelectedDate;
     if (selectedDate < today && clonedDay >= selectedDate && clonedDay <= today)
-      return 'white';
+      return colorTheme.primarySelectedDate;
   }
-  if (isHoliday(clonedDay, arrHolidayDates)) return 'blue';
-  if (!isSameMonth(clonedDay, monthStart)) return 'gray';
-  if (index > 4) return 'blue'; // saturday & sunday
-  return 'black';
+  if (isHoliday(clonedDay, arrHolidayDates)) return colorTheme.blueDate;
+  if (!isSameMonth(clonedDay, monthStart)) return colorTheme.grayDate;
+  if (index > 4) return colorTheme.blueDate; // saturday & sunday
+  return colorTheme.primaryDate;
 };
 
 const getTextOpacity = (
@@ -168,7 +171,9 @@ export const dynamicStyleDateItem = (
         clonedDay,
         today,
       ),
-      borderColor: isSameDay(clonedDay, today) ? colorTheme.today : undefined,
+      borderColor: isSameDay(clonedDay, today)
+        ? colorTheme.todayMarker
+        : undefined,
       borderWidth: isSameDay(clonedDay, today) && !selectedDate ? 1 : 0,
       borderTopLeftRadius: calcBorderRadiusLeft(
         selectedDate,
@@ -207,6 +212,7 @@ export const dynamicStyleDateItem = (
     },
     text: {
       color: getTextColor(
+        colorTheme,
         selectedDate,
         clonedDay,
         today,
@@ -244,7 +250,7 @@ export const dynamicStyleDayLabel = (
 ) =>
   StyleSheet.create({
     text: {
-      color: index > 4 ? 'blue' : 'black', // saturday & sunday
+      color: index > 4 ? colorTheme.blueDate : colorTheme.primaryDate, // saturday & sunday
       flex: 1,
       textAlign: 'center',
     },

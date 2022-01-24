@@ -1,16 +1,10 @@
-import React, {createContext, useEffect, useState} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  useColorScheme,
-  View,
-} from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
+import {SafeAreaView, ScrollView, StatusBar, View} from 'react-native';
 import styles from './styles';
 import CalendarCustom from '../../components/CalendarCustom';
 import CalendarNavigator from '../../components/CalendarNavigator';
 import {getListDateHoliday} from '../../service/serviceDateHoliday';
-import {darkColor, lightColor} from '../../helpers/Colors';
+import {ThemeContext} from '../../../App';
 
 import {addMonths, getMonth, getYear, setYear} from 'date-fns';
 
@@ -21,11 +15,8 @@ interface HolidayDate {
   is_national_holiday: Boolean;
 }
 
-export const ThemeContext = createContext(lightColor);
-
 const CalendarScreen = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
+  const {colorTheme, isDarkMode} = useContext(ThemeContext);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedMonth, setSelectedMonth] = useState(today);
@@ -87,36 +78,32 @@ const CalendarScreen = () => {
 
   // UI render
   return (
-    <ThemeContext.Provider value={isDarkMode ? darkColor : lightColor}>
-      <SafeAreaView
-        style={
-          isDarkMode ? styles.containerMainDark : styles.containerMainLight
-        }>
-        <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-        <ScrollView contentInsetAdjustmentBehavior="automatic">
-          <View style={{padding: 16}}>
-            {!isLoading && (
-              <CalendarNavigator
-                selectedDate={selectedDate}
-                selectedMonth={selectedMonth}
-                selectedYear={selectedYear}
-                updateMonth={val => setSelectedMonth(val)}
-                updateYear={val => setSelectedYear(val)}
-              />
-            )}
-            {!isLoading && (
-              <CalendarCustom
-                arrHolidayDates={arrHolidayDates}
-                selectedDate={selectedDate}
-                selectedMonth={selectedMonth}
-                today={today}
-                updateSelectedDate={val => setSelectedDate(val)}
-              />
-            )}
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </ThemeContext.Provider>
+    <SafeAreaView
+      style={{flex: 1, backgroundColor: colorTheme.primaryBackground}}>
+      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+      <ScrollView contentInsetAdjustmentBehavior="automatic">
+        <View style={{padding: 16}}>
+          {!isLoading && (
+            <CalendarNavigator
+              selectedDate={selectedDate}
+              selectedMonth={selectedMonth}
+              selectedYear={selectedYear}
+              updateMonth={val => setSelectedMonth(val)}
+              updateYear={val => setSelectedYear(val)}
+            />
+          )}
+          {!isLoading && (
+            <CalendarCustom
+              arrHolidayDates={arrHolidayDates}
+              selectedDate={selectedDate}
+              selectedMonth={selectedMonth}
+              today={today}
+              updateSelectedDate={val => setSelectedDate(val)}
+            />
+          )}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 

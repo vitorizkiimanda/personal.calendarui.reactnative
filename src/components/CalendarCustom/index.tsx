@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
 import {dynamicStyleDateItem, dynamicStyleDayLabel} from './styles';
-import {ThemeContext} from '../../screen/CalendarScreen';
+import {ThemeContext} from '../../../App';
 
 import * as dateFns from 'date-fns';
 import {isSameDay} from 'date-fns/esm';
@@ -25,7 +25,7 @@ interface PropsCalendarCustom {
 }
 
 const CalendarCustom = (props: PropsCalendarCustom) => {
-  const colorTheme = useContext(ThemeContext);
+  const {colorTheme} = useContext(ThemeContext);
 
   const {
     arrHolidayDates,
@@ -46,7 +46,9 @@ const CalendarCustom = (props: PropsCalendarCustom) => {
   const renderDayLabel = () => (
     <View style={{flexDirection: 'row', marginBottom: 16}}>
       {DAY_LABEL.map((val, index) => (
-        <Text style={dynamicStyleDayLabel(colorTheme, index).text}>{val}</Text>
+        <Text key={val} style={dynamicStyleDayLabel(colorTheme, index).text}>
+          {val}
+        </Text>
       ))}
     </View>
   );
@@ -70,6 +72,7 @@ const CalendarCustom = (props: PropsCalendarCustom) => {
         const clonedDay = day;
         days.push(
           <TouchableOpacity
+            key={formattedDate}
             onPress={() => onPressDate(clonedDay)}
             style={
               dynamicStyleDateItem(
@@ -105,7 +108,7 @@ const CalendarCustom = (props: PropsCalendarCustom) => {
             <Text
               style={
                 dynamicStyleDateItem(
-                  colorTheme.selectedDate,
+                  colorTheme,
                   selectedDate,
                   clonedDay,
                   today,
@@ -121,7 +124,9 @@ const CalendarCustom = (props: PropsCalendarCustom) => {
         day = dateFns.addDays(day, 1);
       }
       rows.push(
-        <View style={{flex: 1, flexDirection: 'row', marginTop: 16}}>
+        <View
+          key={rows.length}
+          style={{flex: 1, flexDirection: 'row', marginTop: 16}}>
           {days}
         </View>,
       );

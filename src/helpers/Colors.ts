@@ -1,17 +1,30 @@
-const TODAY = '#31e3a2';
-const SELECTED_DATE = '#fe394a';
+const GRAY_DATE = '#b6b7b6';
 
 export interface colorInterface {
-  today: string;
-  selectedDate: string;
+  primaryDate: string;
+  primarySelectedDate: string;
+  todayMarker: string;
+  selectedDateMarker: string;
+  grayDate: string;
+  blueDate: string;
 }
 
 export const lightColor = {
-  today: TODAY,
-  selectedDate: SELECTED_DATE,
+  primaryDate: '#1a1a1a',
+  primarySelectedDate: '#ffffff',
+  primaryBackground: '#ffffff',
+  todayMarker: '#31e3a2',
+  selectedDateMarker: '#fe394a',
+  grayDate: GRAY_DATE,
+  blueDate: '#144bad',
 };
 
 export const darkColor = {
-  today: TODAY,
-  selectedDate: SELECTED_DATE,
+  primaryDate: '#ffffff',
+  primarySelectedDate: '#ffffff',
+  primaryBackground: '#1a1a1a',
+  todayMarker: '#229f71',
+  selectedDateMarker: '#b02441',
+  grayDate: GRAY_DATE,
+  blueDate: '#84a0d4',
 };
