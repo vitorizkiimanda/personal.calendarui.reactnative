@@ -219,7 +219,11 @@ export const dynamicStyleDateItem = (
         arrHolidayDates,
         index,
       ),
-      fontWeight: '500',
+      fontWeight:
+        (!!selectedDate && isSameDay(clonedDay, selectedDate)) ||
+        isSameDay(clonedDay, today)
+          ? '700'
+          : '500',
       textAlign: 'center',
       opacity: getTextOpacity(
         selectedDate,
