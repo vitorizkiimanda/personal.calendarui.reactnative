@@ -72,7 +72,6 @@ const CalendarScreen = () => {
       setArrHolidayDates([...dataPrev, ...dataCurr, ...dataNext]);
       setIsLoading(false);
     } catch (error) {
-      console.log('error', error);
       setIsLoading(false);
     }
   };
@@ -96,6 +95,7 @@ const CalendarScreen = () => {
               });
             }}
             value={reducerProvider.state.isForceDarkMode}
+            style={{marginBottom: 16}}
           />
           {!isLoading && (
             <CalendarNavigator

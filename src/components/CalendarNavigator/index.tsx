@@ -3,6 +3,7 @@ import {Text, TouchableOpacity, View} from 'react-native';
 import ModalDropdown from '../ModalDropdown';
 import {ThemeContext} from '../../../App';
 import {dynamicStyleChevronNextPrev} from './styles';
+import unicodeCharacters from '../../constants/unicodeCharacters';
 
 import * as dateFns from 'date-fns';
 
@@ -77,11 +78,13 @@ const CalendarNavigator = (props: CalendarNavigatorInterface) => {
           flexWrap: 'wrap',
           marginRight: 16,
         }}>
-        <View style={{alignItems: 'flex-start', maxWidth: '60%'}}>
+        <View
+          style={{alignItems: 'flex-start', maxWidth: '60%', marginRight: 16}}>
           <ModalDropdown
             list={LABEL_MONTH}
             selected={dateFns.format(selectedMonth, 'MMMM')}
             updateSelected={onUpdateMonth}
+            isFullWidth={true}
           />
         </View>
         <View style={{alignItems: 'flex-start', maxWidth: '40%'}}>
@@ -89,6 +92,7 @@ const CalendarNavigator = (props: CalendarNavigatorInterface) => {
             list={LABEL_YEAR}
             selected={selectedYear}
             updateSelected={onUpdateYear}
+            isFullWidth={true}
           />
         </View>
       </View>
@@ -103,14 +107,16 @@ const CalendarNavigator = (props: CalendarNavigatorInterface) => {
             ...dynamicStyleChevronNextPrev(colorTheme).container,
           }}
           onPress={onPressPrevMonth}>
-          <Text
-            style={dynamicStyleChevronNextPrev(colorTheme).text}>{`<`}</Text>
+          <Text style={dynamicStyleChevronNextPrev(colorTheme).text}>
+            {unicodeCharacters.leftPointingTriangle}
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={dynamicStyleChevronNextPrev(colorTheme).container}
           onPress={onPressNextMonth}>
-          <Text
-            style={dynamicStyleChevronNextPrev(colorTheme).text}>{`>`}</Text>
+          <Text style={dynamicStyleChevronNextPrev(colorTheme).text}>
+            {unicodeCharacters.rightPointingTriangle}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>

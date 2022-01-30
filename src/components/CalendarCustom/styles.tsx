@@ -128,7 +128,7 @@ const getTextColor = (
   if (isHoliday(clonedDay, arrHolidayDates)) return colorTheme.blueDate;
   if (!isSameMonth(clonedDay, monthStart)) return colorTheme.grayDate;
   if (index > 4) return colorTheme.blueDate; // saturday & sunday
-  return colorTheme.primaryDate;
+  return colorTheme.primaryText;
 };
 
 const getTextOpacity = (
@@ -263,7 +263,7 @@ export const dynamicStyleDayLabel = (
 ) =>
   StyleSheet.create({
     text: {
-      color: index > 4 ? colorTheme.blueDate : colorTheme.primaryDate, // saturday & sunday
+      color: index > 4 ? colorTheme.blueDate : colorTheme.primaryText, // saturday & sunday
       flex: 1,
       fontWeight: '500',
       textAlign: 'center',
