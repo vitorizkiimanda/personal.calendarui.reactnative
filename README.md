@@ -19,16 +19,10 @@ This project is built with these plugins and frameworks:
 
 ## Demo
 
-| Android                                                                                                                               | Ios                                                                                                                          |
+| Android
+demo apk [click_here](https://raw.githubusercontent.com/vitorizkiimanda/personal.calendarui.reactnative/develop/demo/app-release.apk) | Ios |
 | ------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| ![Android Demo GIF](https://raw.githubusercontent.com/vitorizkiimanda/personal.calendarui.reactnative/develop/demo/android-demo.gif)  | ![Ios Demo GIF](https://raw.githubusercontent.com/vitorizkiimanda/personal.calendarui.reactnative/develop/demo/ios-demo.gif) |
-| demo apk [click_here](https://raw.githubusercontent.com/vitorizkiimanda/personal.calendarui.reactnative/develop/demo/app-release.apk) | -                                                                                                                            |
-
-- android (demo apk [click_here](https://raw.githubusercontent.com/vitorizkiimanda/personal.calendarui.reactnative/develop/demo/app-release.apk))
-  ![Alt Text](https://raw.githubusercontent.com/vitorizkiimanda/personal.calendarui.reactnative/develop/demo/android-demo.gif)
-- ios
-
-  ![Alt Text](https://raw.githubusercontent.com/vitorizkiimanda/personal.calendarui.reactnative/develop/demo/ios-demo.gif)
+| ![Android Demo GIF](https://raw.githubusercontent.com/vitorizkiimanda/personal.calendarui.reactnative/develop/demo/android-demo.gif) | ![Ios Demo GIF](https://raw.githubusercontent.com/vitorizkiimanda/personal.calendarui.reactnative/develop/demo/ios-demo.gif) |
 
 ## How To Run Project
 
