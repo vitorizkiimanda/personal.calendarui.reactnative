@@ -104,6 +104,23 @@ const CalendarCustom = (props: PropsCalendarCustom) => {
                 />
               )}
 
+            {/* circular border marker : today date and unselected date range */}
+            {isSameDay(clonedDay, today) && !selectedDate && (
+              <View
+                style={
+                  dynamicStyleDateItem(
+                    colorTheme,
+                    selectedDate,
+                    clonedDay,
+                    today,
+                    monthStart,
+                    arrHolidayDates,
+                    i,
+                  ).circularMarkerToday
+                }
+              />
+            )}
+
             {/* date text */}
             <Text
               style={

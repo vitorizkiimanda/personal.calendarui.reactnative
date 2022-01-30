@@ -34,9 +34,12 @@ const backgroundColorDateCell = (
   today: Date,
 ) => {
   if (
-    isSelected(selectedDate, clonedDay, today) ||
-    (!!selectedDate && isSameDay(clonedDay, today))
+    !!selectedDate &&
+    isSameDay(selectedDate, today) &&
+    isSameDay(selectedDate, clonedDay)
   )
+    return undefined;
+  if (isSelected(selectedDate, clonedDay, today))
     return colorTheme.selectedDateMarker;
   return undefined;
 };
@@ -171,10 +174,6 @@ export const dynamicStyleDateItem = (
         clonedDay,
         today,
       ),
-      borderColor: isSameDay(clonedDay, today)
-        ? colorTheme.todayMarker
-        : undefined,
-      borderWidth: isSameDay(clonedDay, today) && !selectedDate ? 1 : 0,
       borderTopLeftRadius: calcBorderRadiusLeft(
         selectedDate,
         clonedDay,
@@ -220,6 +219,7 @@ export const dynamicStyleDateItem = (
         arrHolidayDates,
         index,
       ),
+      fontWeight: '500',
       textAlign: 'center',
       opacity: getTextOpacity(
         selectedDate,
@@ -242,6 +242,15 @@ export const dynamicStyleDateItem = (
       width: CELL_WIDTH + 8,
       overflow: 'visible',
     },
+    circularMarkerToday: {
+      borderColor: colorTheme.todayMarker,
+      borderRadius: CELL_WIDTH,
+      borderWidth: 1,
+      height: CELL_WIDTH,
+      position: 'absolute',
+      width: CELL_WIDTH,
+      overflow: 'visible',
+    },
   });
 
 export const dynamicStyleDayLabel = (
@@ -252,6 +261,7 @@ export const dynamicStyleDayLabel = (
     text: {
       color: index > 4 ? colorTheme.blueDate : colorTheme.primaryDate, // saturday & sunday
       flex: 1,
+      fontWeight: '500',
       textAlign: 'center',
     },
   });
